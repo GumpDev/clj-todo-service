@@ -8,5 +8,6 @@
                  [io.pedestal/pedestal.route "0.5.7"]
                  [io.pedestal/pedestal.jetty "0.5.7"]
                  [org.clojure/data.json "0.2.6"]
-                 [org.slf4j/slf4j-simple "1.7.28"]]
+                 [org.slf4j/slf4j-simple "1.7.28"]
+                 [prismatic/schema "1.4.1"]]
   :repl-options {:init-ns clj-todo-service.core})
