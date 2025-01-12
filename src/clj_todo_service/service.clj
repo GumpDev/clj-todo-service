@@ -1,12 +1,20 @@
 (ns clj-todo-service.service
   (:require [io.pedestal.http.route :as route]
             [io.pedestal.http :as http]
-            [io.pedestal.test :as test]))
+            [io.pedestal.test :as test])
+  (:import (java.util UUID)))
 
 (def store (atom {}))
 
+(defn criar-tarefa-mapa [nome]
+  {:nome nome :status 0})
+
 (defn criar-tarefa [request]
-  (let []))
+  (let [uuid (UUID/randomUUID)
+         nome (get-in request [:query-params :nome])
+         tarefa (criar-tarefa-mapa nome)]
+     (swap! store assoc uuid tarefa)
+     {:status 200 :body "Success"}))
 
 (defn funcao-hello [request]
   {:status 200 :body (str "hello world " (get-in request [:query-params :name]))})
@@ -31,3 +39,4 @@
 
 (start-server!)
 (println (test-endpoint :get "/hello"))
+(println (test-endpoint :post "/criar-tarefa?nome=teste"))
