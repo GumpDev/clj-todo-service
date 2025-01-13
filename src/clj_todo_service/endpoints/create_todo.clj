@@ -11,10 +11,10 @@
         description (get body :description)
         status (get body :status)]
     (d/transact db/conn
-                [{:todo/id id
-                  :todo/title title
-                  :todo/description description
-                  :todo/status status}])))
+                {:tx-data [{:todo/id id
+                            :todo/title title
+                            :todo/description description
+                            :todo/status status}]})))
 
 (defn create-todo [request]
   (let [body (utils/get-body request)

@@ -5,18 +5,23 @@
 
 (defn find-todos []
   (d/q
-    '[:find ?title
-      :where [_ :todo/title ?title]]
+    '[:find ?id ?title ?description ?status
+      :where
+      [?e :todo/id ?id]
+      [?e :todo/title ?title]
+      [?e :todo/description ?description]
+      [?e :todo/status ?status]]
     db/db))
 
 (defn get-todos [request]
   {:status 200
-   :body (cheshire/generate-string (find-todos))})
+   :body (cheshire/generate-string (list (find-todos)))})
 
-(d/q '[:find ?id ?title ?description ?status
-       :where
-       [?e :todo/id ?id]
-       [?e :todo/title ?title]
-       [?e :todo/description ?description]
-       [?e :todo/status ?status]]
-     db/db)
+(d/q
+  '[:find ?id ?title ?description ?status
+    :where
+    [?e :todo/id ?id]
+    [?e :todo/title ?title]
+    [?e :todo/description ?description]
+    [?e :todo/status ?status]]
+  db/db)
