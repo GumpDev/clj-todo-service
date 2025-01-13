@@ -10,5 +10,7 @@
                  [org.clojure/data.json "0.2.6"]
                  [org.slf4j/slf4j-simple "1.7.28"]
                  [prismatic/schema "1.4.1"]
-                 [com.datomic/local "1.0.285"]]
+                 [com.datomic/local "1.0.285"]
+                 [org.clojure/data.json "2.5.1"]
+                 [cheshire "5.10.0"]]
   :repl-options {:init-ns clj-todo-service.core})
