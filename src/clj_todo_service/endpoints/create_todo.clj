@@ -1,28 +1,25 @@
 (ns clj-todo-service.endpoints.create-todo
-  (:require [clj-todo-service.services.database :as db]
-            [clj-todo-service.utils :as utils]
-            [datomic.client.api :as d]
-            [clojure.data.json :as json])
+  (:require [clj-todo-service.utils :as utils]
+            [clj-todo-service.operations.insert-todo :as operation]
+            [clojure.data.json :as json]
+            [schema.core :as s])
   (:import (java.util UUID)))
 
-(defn insert-todo! [body]
-  (let [id (get body :id)
-        title (get body :title)
-        description (get body :description)
-        status (get body :status)]
-    (d/transact db/conn
-                {:tx-data [{:todo/id id
-                            :todo/title title
-                            :todo/description description
-                            :todo/status status}]})))
+(s/defschema CreateTodoRequest
+  {:body s/Any})
+(s/defschema CreateTodoResponse
+  {:status {:schema s/Int :require true}
+   :body {:schema s/Str :require true}})
 
-(defn create-todo [request]
+(s/defn create-todo :- CreateTodoResponse
+  "Create a new ToDo endpoint"
+  [request :- CreateTodoRequest]
   (let [body (utils/get-body request)
         todo { :id (.toString (UUID/randomUUID))
           :title (get body :title)
           :description (get body :description)
           :status 0}]
     (do
-      (insert-todo! todo)
-      { :status 200
+      (operation/insert-todo! todo)
+      { :status 201
         :body (json/write-str todo)})))

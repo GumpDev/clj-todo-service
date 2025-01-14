@@ -1,27 +1,13 @@
 (ns clj-todo-service.endpoints.get-todos
-  (:require [datomic.client.api :as d]
-            [cheshire.core :as cheshire]
-            [clj-todo-service.services.database :as db]))
+  (:require [clj-todo-service.operations.find-todos :as find-todos]
+            [schema.core :as s]
+            [cheshire.core :as cheshire]))
 
-(defn find-todos []
-  (d/q
-    '[:find ?id ?title ?description ?status
-      :where
-      [?e :todo/id ?id]
-      [?e :todo/title ?title]
-      [?e :todo/description ?description]
-      [?e :todo/status ?status]]
-    db/db))
+(s/defschema GetTodoResponse {:status {:schema s/Int :require true}
+                              :body {:schema s/Str :require true}})
 
-(defn get-todos [request]
+(s/defn get-todos :- GetTodoResponse
+  "Get all ToDos endpoint"
+  [request]
   {:status 200
-   :body (cheshire/generate-string (list (find-todos)))})
-
-(d/q
-  '[:find ?id ?title ?description ?status
-    :where
-    [?e :todo/id ?id]
-    [?e :todo/title ?title]
-    [?e :todo/description ?description]
-    [?e :todo/status ?status]]
-  db/db)
+   :body (cheshire/generate-string (find-todos/find-todos))})
