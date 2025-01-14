@@ -6,7 +6,7 @@
   (let [body (get request :body)]
     (if body
       (cheshire/parse-string (slurp body) true)
-      request)))
+      nil)))
 
 (defn error [code msg]
   { :status code
