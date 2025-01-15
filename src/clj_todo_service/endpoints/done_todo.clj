@@ -27,6 +27,6 @@
           :description (:description todo)
           :status status })
         { :status 202
-          :body (json/write-str todo)})
+          :body (json/write-str (assoc todo :status 1))})
     )
   ))

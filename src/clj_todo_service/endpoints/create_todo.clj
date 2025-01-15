@@ -19,7 +19,10 @@
           :title (get body :title)
           :description (get body :description)
           :status 0}]
-    (do
-      (operation/insert-todo! todo)
-      { :status 201
-        :body (json/write-str todo)})))
+      (cond
+        (= (:title body) nil) (utils/error 400 "Missing title")
+        :else
+        (do
+          (operation/insert-todo! todo)
+          { :status 201
+           :body (json/write-str todo)}))))
