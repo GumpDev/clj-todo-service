@@ -1,13 +1,12 @@
 (ns clj-todo-service.utils
-  (:require [cheshire.core :as cheshire]
-            [clojure.data.json :as json]))
+  (:require [clojure.edn :as edn]))
 
 (defn get-body [request]
-  (let [body (get request :body)]
+  (let [body (:body request)]
     (if body
-      (cheshire/parse-string (slurp body) true)
+      (edn/read-string (slurp body))
       nil)))
 
-(defn error [code msg]
+(defn response [code body]
   { :status code
-    :body (json/write-str {:msg msg})})
+    :body body})

@@ -1,12 +1,12 @@
 (ns clj-todo-service.operations.find-todos
-  (:require [clj-todo-service.services.database :as db]
+  (:require [clj-todo-service.services.database :refer [q]]
             [clj-todo-service.schemas.todo-schema :as schema]
             [schema.core :as s]))
 
 (s/defn find-todos :- [schema/ToDo]
   "Find all ToDos from the database"
   []
-  (db/q
+  (q
    '[:find ?id ?title ?description ?status
      :keys id title description status
      :where

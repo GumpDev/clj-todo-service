@@ -1,13 +1,10 @@
 (ns clj-todo-service.endpoints.get-todos
-  (:require [clj-todo-service.operations.find-todos :as find-todos]
-            [schema.core :as s]
-            [cheshire.core :as cheshire]))
+  (:require [clj-todo-service.operations.find-todos :refer [find-todos]]
+            [schema.core :as s]))
 
-(s/defschema GetTodoResponse {:status {:schema s/Int :require true}
-                              :body {:schema s/Str :require true}})
-
-(s/defn get-todos :- GetTodoResponse
+(s/defn get-todos
   "Get all ToDos endpoint"
   [request]
-  {:status 200
-   :body (cheshire/generate-string (find-todos/find-todos))})
+  (let [todos (find-todos)]
+    { :status 200
+      :body todos}))

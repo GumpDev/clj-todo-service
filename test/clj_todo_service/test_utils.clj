@@ -4,7 +4,7 @@
   (:import [java.io ByteArrayInputStream]))
 
 (defn mock-request [request]
-  (let [body (get request :body "")
+  (let [body (get request :body {})
         path-params (:path-params request)
         byte-array (.getBytes (str body))
         b-file (io/input-stream (ByteArrayInputStream. byte-array))]

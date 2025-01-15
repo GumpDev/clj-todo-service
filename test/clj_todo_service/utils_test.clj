@@ -1,15 +1,9 @@
 (ns clj-todo-service.utils_test
-  (:require [clojure.java.io :as io]
-            [clojure.test :refer :all]
-            [clj-todo-service.test_utils :refer :all])
-  (:import [java.io ByteArrayInputStream]))
+  (:require [clojure.test :refer :all]
+            [clj-todo-service.utils :refer :all]
+            [clj-todo-service.test_utils :refer [mock-request]]))
 
-(def test-body
-  (let [json-str "{\"name\": \"Joao\", \"balance\": 100.5, \"active\": true}"
-        byte-array (.getBytes json-str)]
-    (io/input-stream (ByteArrayInputStream. byte-array))))
-(def valid-test-request
-  {:body test-body})
+
 (def invalid-test-request
   {:b "teste"})
 
@@ -17,7 +11,7 @@
   (testing "get-body"
     (testing "with valid body"
       (is (=
-           (get-body valid-test-request)
+           (get-body (mock-request {:body {:name "Joao" :balance 100.5 :active true}}))
                      {:name "Joao"
                       :balance 100.5
                       :active true})))
@@ -27,14 +21,14 @@
            nil)))))
 
 (deftest error-test
-  (testing "error"
+  (testing "response"
     (testing "with valid code and messages"
       (are [x y] (= x y)
-        (error 404 "Not Found")
-        {:status 404, :body "{\"msg\":\"Not Found\"}"})
-        (error 400 "Bad Request")
-        {:status 400, :body "{\"msg\":\"Bad Request\"}"}
-        (error 403 "Forbidden")
-        {:status 403, :body "{\"msg\":\"Forbidden\"}"})))
+        (response 404 {:error "Not Found"})
+        {:status 404, :body {:error "Not Found"}})
+        (response 400 {:error "Bad request"})
+        {:status 400, :body {:error "Bad request"}}
+        (response 200 {:success true})
+        {:status 200, :body {:success true}})))
 
 (run-tests)

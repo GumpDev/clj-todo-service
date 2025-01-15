@@ -1,12 +1,12 @@
 (ns clj-todo-service.operations.find-todo
-  (:require [clj-todo-service.services.database :as db]
+  (:require [clj-todo-service.services.database :refer [q]]
             [clj-todo-service.schemas.todo-schema :as schema]
             [schema.core :as s]))
 
 (s/defn find-todo :- schema/ToDo
   "Find one ToDo from the database"
   [id :- s/Str]
-  (first (db/q
+  (first (q
    '[:find ?id ?title ?description ?status
      :keys id title description status
      :in $ ?id
