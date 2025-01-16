@@ -13,7 +13,6 @@
     (cond
       (nil? todo) (response 404 {:error "ToDo Not Found!"})
       (not (= (:status todo) 0)) (response 400 {:error "ToDo can't be done!"})
-
       :else
       (do
         (upsert-todo! id {:status status})
